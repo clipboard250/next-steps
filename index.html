@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Fort Collins, one step at a time: a room with your dog, help searching, move-in money, parking, showers, food and a free vet.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Next Steps">
+<meta property="og:description" content="A room with your dog, help searching, move-in money, parking, showers, food and a free vet. Fort Collins, one checklist.">
+<meta property="og:url" content="https://clipboard250.github.io/next-steps/">
+<meta property="og:image" content="https://clipboard250.github.io/next-steps/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://clipboard250.github.io/next-steps/og-image.png">
+<meta name="theme-color" content="#1E7A3C">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Next Steps</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;600;800&family=IBM+Plex+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: deadpan field-notebook index. Numbered tiles, each with a hand-sketched Colorado plant; tap to open a full-screen checklist. Ink, paper, one green. */
+:root {
+  --bg: #FBFBF7;
+  --fg: #111311;
+  --muted: #646A64;
+  --rule: #111311;
+  --green: #1E7A3C;
+  --green-soft: #E3F1E6;
+  --on-green: #FFFFFF;
+  --display: "Anton", "Impact", "Arial Narrow", sans-serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E110E; --fg: #EEF1EC; --muted: #9AA39A; --rule: #EEF1EC;
+    --green: #6FD08C; --green-soft: #18291D; --on-green: #0E110E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E110E; --fg: #EEF1EC; --muted: #9AA39A; --rule: #EEF1EC;
+  --green: #6FD08C; --green-soft: #18291D; --on-green: #0E110E; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px 40px;
+}
+.wrap { max-width: 40rem; margin: 0 auto; }
+.mono { font-family: var(--mono); font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase; }
+.flora { color: var(--green); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; display: block; }
+
+header { border-bottom: 3px solid var(--rule); padding-bottom: 14px; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: end; }
+header .top { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(3.4rem, 17vw, 6.5rem); line-height: 0.88; margin: 6px 0 0; text-transform: uppercase; }
+header .hero { width: clamp(84px, 24vw, 140px); height: auto; }
+header p { grid-column: 1 / -1; margin: 6px 0 0; max-width: 32rem; }
+
+.list { list-style: none; margin: 0; padding: 0; }
+.tile {
+  width: 100%; text-align: left; background: none; color: inherit; border: 0; border-bottom: 1.5px solid var(--rule);
+  padding: 14px 0; display: grid; grid-template-columns: 2.8rem 1fr 56px; gap: 4px 12px; align-items: center; cursor: pointer; font: inherit;
+}
+.tile:hover .t-title, .tile:focus-visible .t-title { color: var(--green); }
+.tile:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+.num { font-family: var(--display); font-size: 2.1rem; line-height: 1; font-variant-numeric: tabular-nums; align-self: start; }
+.t-main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.t-title { font-family: var(--display); font-size: 1.5rem; line-height: 1.05; text-transform: uppercase; }
+.t-prev { color: var(--muted); font-size: 0.95rem; }
+.t-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.tile .flora { width: 56px; height: 56px; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 6px; border: 1.5px solid var(--fg); }
+.tag.easy { background: var(--fg); color: var(--bg); }
+.prog { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.04em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.prog.some { color: var(--green); font-weight: 700; }
+.tile.all .t-title { text-decoration: line-through; text-decoration-color: var(--green); text-decoration-thickness: 3px; }
+
+footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
+.reset { align-self: flex-start; }
+
+.sheet {
+  position: fixed; inset: 0; background: var(--bg); overflow-y: auto; z-index: 20;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.sheet .wrap { display: flex; flex-direction: column; gap: 16px; }
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 3px solid var(--rule); padding-bottom: 10px; }
+.btn {
+  font-family: var(--mono); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+  background: var(--bg); color: var(--fg); border: 1.5px solid var(--fg); padding: 10px 12px; cursor: pointer; text-decoration: none; display: inline-block;
+}
+.btn.solid { background: var(--fg); color: var(--bg); }
+.btn:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+.s-head { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+.s-num { font-family: var(--display); font-size: clamp(4.5rem, 26vw, 8rem); line-height: 0.85; }
+.s-head .flora { width: clamp(96px, 30vw, 150px); height: auto; }
+.s-title { font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 10vw, 3.4rem); line-height: 0.95; text-transform: uppercase; margin: 0; text-wrap: balance; }
+.plant { font-family: var(--mono); font-size: 0.72rem; color: var(--green); letter-spacing: 0.05em; text-transform: uppercase; }
+.s-body { display: flex; flex-direction: column; gap: 12px; }
+.s-body > p { margin: 0; max-width: 34rem; }
+
+.item { border-top: 1.5px solid var(--rule); padding-top: 12px; display: grid; grid-template-columns: 34px 1fr; gap: 4px 12px; min-width: 0; }
+.item input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.box {
+  width: 30px; height: 30px; border: 2px solid var(--fg); display: grid; place-items: center; cursor: pointer; margin-top: 2px;
+}
+.box svg { width: 22px; height: 22px; stroke: var(--on-green); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0; }
+.item input:checked + .box { background: var(--green); border-color: var(--green); }
+.item input:checked + .box svg { opacity: 1; }
+.item input:focus-visible + .box { outline: 3px solid var(--green); outline-offset: 2px; }
+.i-main { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.task { font-weight: 800; font-size: 1.05rem; cursor: pointer; }
+.item input:checked ~ .i-main .task { text-decoration: line-through; text-decoration-color: var(--green); text-decoration-thickness: 2px; }
+.where { font-weight: 600; }
+.meta { color: var(--muted); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 6px; }
+.phone { font-family: var(--mono); font-weight: 700; user-select: all; }
+.note { font-family: var(--mono); font-size: 0.78rem; color: var(--green); text-transform: uppercase; letter-spacing: 0.04em; margin: 0; }
+.pager { display: flex; gap: 8px; border-top: 3px solid var(--rule); padding-top: 14px; }
+.pager .btn { flex: 1; text-align: center; padding: 14px 10px; }
+.pager .btn:disabled { opacity: 0.3; cursor: default; }
+.peek { color: var(--muted); font-size: 0.9rem; margin: 0; }
+</style>
+</head>
+<body>
+
+<!-- Pencil wobble applied to every sketch -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="pencil"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>
+</svg>
+
+<div class="wrap" id="index">
+  <header>
+    <div class="top mono"><span>Fort Collins / Field index</span><span>Rev. 10.23.26</span></div>
+    <h1>Next<br>Steps</h1>
+    <span id="hero"></span>
+    <p>While the apartment gets sorted. Nine files, any order. Check things off as you go. Skip what doesn't apply.</p>
+  </header>
+  <ol class="list" id="list"></ol>
+  <footer class="mono">
+    <span>Hours and prices change. Call first.</span>
+    <span>Checkmarks save on this phone only. Nothing is sent anywhere.</span>
+    <button class="btn reset" id="reset" type="button">Clear all checks</button>
+  </footer>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="s-title">
+  <div class="wrap">
+    <div class="bar">
+      <button class="btn" id="close" type="button">← All files</button>
+      <span class="mono" id="s-count"></span>
+    </div>
+    <div class="s-head"><div class="s-num" id="s-num" aria-hidden="true"></div><div id="s-art"></div></div>
+    <h2 class="s-title" id="s-title"></h2>
+    <span class="plant" id="s-plant"></span>
+    <div><span class="tag" id="s-tag"></span></div>
+    <div class="s-body" id="s-body"></div>
+    <div class="pager">
+      <button class="btn" id="prev" type="button">← Prev</button>
+      <button class="btn solid" id="next" type="button">Next →</button>
+    </div>
+    <p class="peek" id="peek"></p>
+  </div>
+</div>
+
+<script>
+/* Hand-drawn Colorado plants, 80x80, ink strokes */
+const ART = {
+  pricklypear: `<ellipse cx="40" cy="58" rx="13" ry="17"/><ellipse cx="26" cy="32" rx="10" ry="13" transform="rotate(-22 26 32)"/><ellipse cx="53" cy="28" rx="10" ry="14" transform="rotate(18 53 28)"/><path d="M26 18c2-5 6-6 8-2M53 13c1-5 5-6 7-2"/><path d="M36 52l-3-2M44 60l3-1M38 66l-2 2M24 30l-3-1M30 36l2 2M52 24l3-2M56 34l3 1"/><path d="M14 76h52"/>`,
+  columbine: `<path d="M40 76c0-18 1-28 0-38"/><path d="M40 38c-6-4-14-3-18 2 6 3 12 3 18-2zM40 38c6-4 14-3 18 2-6 3-12 3-18-2zM40 38c-4-6-4-14 0-20 4 6 4 14 0 20z"/><path d="M40 38c-7 1-12 7-11 13 5-2 9-7 11-13zM40 38c7 1 12 7 11 13-5-2-9-7-11-13z"/><path d="M22 40c-6-4-8-10-6-14M58 40c6-4 8-10 6-14M40 18c-1-6 2-10 5-11"/><path d="M40 62c-8-2-13 2-15 8M40 56c7-3 12 0 14 5"/>`,
+  aspen: `<path d="M40 76V44"/><path d="M40 44c-14-2-20-14-14-26 6-8 16-10 14-14 0 0 2 6 8 9 10 6 12 18 4 26-4 4-8 5-12 5z"/><path d="M40 44c0-10 1-20 0-30M40 34l-8-6M40 28l7-6M40 38l9-4"/><path d="M28 76h24M44 70l4-2"/>`,
+  yucca: `<path d="M40 74c-2-12-14-18-24-22M40 74c-1-14-6-24-14-32M40 74c0-16 0-26 2-36M40 74c2-14 8-24 16-30M40 74c3-12 14-18 24-20"/><path d="M42 38c0-8 1-16 0-30"/><path d="M42 14c-4 0-5 3-3 5 3 1 5-1 3-5zM42 22c4 0 5 3 3 5-3 1-5-1-3-5zM41 30c-4 0-5 3-3 5 3 1 5-1 3-5z"/>`,
+  sunflower: `<path d="M40 76c1-14-1-24 0-36"/><circle cx="40" cy="28" r="7"/><path d="M40 21c-2-6 0-10 0-12 0 2 2 6 0 12M47 28c6-2 10 0 12 0-2 0-6 2-12 0M40 35c2 6 0 10 0 12 0-2-2-6 0-12M33 28c-6 2-10 0-12 0 2 0 6-2 12 0M45 23c4-5 8-5 10-6-1 2-5 3-10 6M45 33c4 5 8 5 10 6-1-2-5-3-10-6M35 33c-4 5-8 5-10 6 1-2 5-3 10-6M35 23c-4-5-8-5-10-6 1 2 5 3 10 6"/><path d="M40 58c-8-4-14-2-16 4 6 2 12 0 16-4zM40 52c8-4 14-2 16 4-6 2-12 0-16-4z"/>`,
+  grama: `<path d="M30 76c0-16 2-28 8-40M38 76c0-18 4-30 12-42M46 76c0-12-2-22-8-30M24 76c2-10 0-18-6-24M52 76c2-10 6-18 12-22"/><path d="M38 36c4-2 9-1 12 3M50 34c4-3 9-3 12 1"/><path d="M40 35l1 3M43 34l1 3M46 35l1 3M52 33l1 3M55 32l1 3M58 33l1 3"/>`,
+  pine: `<path d="M38 76c2-10 4-22 2-34"/><path d="M40 42c-2-10-8-18-16-22M40 42c0-10-2-20-6-28M40 42c2-10 4-20 10-26M40 42c4-8 10-14 18-16M40 42c-6-6-14-8-22-6"/><path d="M38 58c-6-2-12 0-14 4M39 56c6-3 11-1 13 3"/><ellipse cx="50" cy="66" rx="5" ry="7"/><path d="M46 63h8M45 67h10M47 71h6"/>`,
+  rabbitbrush: `<path d="M40 76c0-10 0-18 0-26M40 64c-6-6-12-14-14-26M40 64c6-6 12-14 14-26M40 56c-3-8-6-16-6-26M40 56c3-8 6-16 6-26M40 50c0-8 0-16 0-24"/><path d="M26 38c-2-3 0-6 2-6 2 1 2 4-2 6zM54 38c2-3 0-6-2-6-2 1-2 4 2 6zM34 30c-2-3 0-6 2-6 2 1 2 4-2 6zM46 30c2-3 0-6-2-6-2 1-2 4 2 6zM40 26c-2-3 0-6 0-6 2 0 2 3 0 6z"/><path d="M24 76h32"/>`,
+  sage: `<path d="M40 76c0-16-2-30 2-46"/><path d="M41 62c-8-2-12-8-12-14M41 62c7-3 11-9 10-15M41 48c-7-2-10-7-10-12M41 48c6-3 9-8 8-13M42 36c-5-2-7-6-6-10M42 36c5-2 7-6 6-10"/><path d="M29 48c-3-1-4-3-3-5M51 47c3-1 4-3 3-5M31 36c-3-1-3-3-2-5M49 35c3-1 3-3 2-5"/><path d="M42 30c0-6 1-10 0-14"/>`
+};
+const sketch = (k, cls = "") => `<svg class="flora ${cls}" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#pencil)">${ART[k]}</g></svg>`;
+const check = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>`;
+
+const map = a => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(a + ", Fort Collins, CO");
+
+const allFiles = [
+  {
+    title: "Room w/ dog", plant: "Prickly pear / Opuntia polyacantha", art: "pricklypear",
+    prev: "Weekly hotel rooms. No lease. Dog stays.", tag: ["easy", "No forms / just check in"],
+    intro: "Pay by the week, extend by the week. The fastest way indoors with the dog.",
+    items: [
+      { id: "ws", task: "Call WoodSpring for the weekly price", where: "WoodSpring Suites", addr: "847 SE Frontage Rd", meta: "Kitchen in the room. Guest laundry. Dogs to 75 lb: $50 per stay + $10/night. Card only.", phone: "(970) 460-4436" },
+      { id: "ri", task: "Backup: Residence Inn", where: "Residence Inn", addr: "1127 Oakridge Dr", meta: "Nicer, pricier. Dogs to 100 lb. About $150 dog fee for 5+ nights.", phone: "(970) 223-5700" },
+      { id: "h2", task: "Backup: Home2 Suites", where: "Home2 Suites", addr: "4715 S Timberline Rd", meta: "Kitchen in every suite. $125 dog fee for 5+ nights." },
+      { id: "ask", task: "Ask if the dog can stay in the room while you're at work" }
+    ]
+  },
+  {
+    title: "The lease", plant: "Columbine / Aquilegia caerulea", art: "columbine",
+    prev: "They owe you a room, a hotel or a credit.", tag: ["easy", "No forms"],
+    intro: "If the landlord can't hand over the room, the contract says they must offer another room, a hotel, or a rent credit. Nothing offered by Nov 8 means you can cancel in writing and get the deposit and rent back.",
+    items: [
+      { id: "save", task: "Save every email and screenshot texts about key dates" },
+      { id: "ask", task: "Ask the office in writing: room, hotel or credit?" },
+      { id: "nov8", task: "Nov 8: nothing offered? Cancel in writing" },
+      { id: "sign", task: "Don't sign \"release,\" \"waive\" or \"full satisfaction\" without a second look" },
+      { id: "city", task: "Optional: free city landlord–tenant help", where: "Fort Collins Neighborhood Services", meta: "Free. By phone.", phone: "(970) 224-6046" },
+      { id: "cls", task: "Optional: free legal help", where: "Colorado Legal Services", meta: "Housing help for people who qualify.", phone: "(970) 493-2891" }
+    ]
+  },
+  {
+    title: "Let someone else search", plant: "Rubber rabbitbrush / Ericameria nauseosa", art: "rabbitbrush",
+    prev: "One person finds the place and handles the back-and-forth.", tag: ["easy", "One person / one form"],
+    intro: "A rental agent or apartment locator does the searching and most of the paperwork. Locators are usually free to renters because the buildings pay them.",
+    items: [
+      { id: "ref", task: "Get a referral to a Fort Collins rental agent from a realtor you trust" },
+      { id: "tell", task: "Tell them: dog, budget, move-in date, no guarantor drama" },
+      { id: "loc", task: "Or try an apartment locator", where: "Premium Apartment Locators, Vita Locators, The Dwelling Collection", meta: "Mostly Denver. Ask first if they cover Fort Collins.", url: "https://vitalocators.com/" },
+      { id: "csu", task: "Browse rooms and rentals from private owners", where: "CSU Off-Campus Life listings", addr: "Lory Student Center, Room 281", meta: "Open to the public. Private owners often skip the guarantor. Mon–Fri 9–5.", phone: "(970) 491-2248" }
+    ]
+  },
+  {
+    title: "Showers", plant: "Quaking aspen / Populus tremuloides", art: "aspen",
+    prev: "24/7 gym or $10 drop-in.", tag: ["easy", "No forms"],
+    items: [
+      { id: "pf", task: "Planet Fitness membership", where: "Planet Fitness", addr: "126 W Troutman Pkwy", meta: "Open 24/7. About $15/month + yearly fee. Locker rooms with showers.", phone: "(970) 682-1006" },
+      { id: "na", task: "Or drop in at Northside Aztlan", where: "Northside Aztlan Community Center", addr: "112 E Willow St", meta: "City rec center. $10 drop-in. Weekdays 6 a.m.–9 p.m., weekends 8–5.", phone: "(970) 221-6256" },
+      { id: "epic", task: "Or drop in at EPIC", where: "EPIC", addr: "1801 Riverside Ave", meta: "City rec center. $10 drop-in. Weekdays from 5:30 a.m.", phone: "(970) 221-6683" }
+    ]
+  },
+  {
+    title: "Food", plant: "Soapweed yucca / Yucca glauca", art: "yucca",
+    prev: "Pay-what-you-can lunch. Free groceries.", tag: ["easy", "No forms"],
+    items: [
+      { id: "cafe", task: "Lunch at FoCo Café", where: "FoCo Café", addr: "225 Maple St", meta: "Pay what you can, or help out instead. Lunch 11–2, most days Mon–Sat. Call to confirm.", phone: "(309) 368-1659" },
+      { id: "fb", task: "Grab groceries at the Food Bank", where: "Food Bank for Larimer County", addr: "1301 Blue Spruce Dr", meta: "Free. Tue, Thu, Fri, Sat 10–3. Pick ready-to-eat stuff.", phone: "(970) 493-4477" }
+    ]
+  },
+  {
+    title: "The dog", plant: "Plains sunflower / Helianthus petiolaris", art: "sunflower",
+    prev: "Free vet Tuesdays. Cheap shots. Food help.", tag: ["easy", "Mostly no forms"],
+    items: [
+      { id: "vet", task: "Sign up for a free Tuesday vet visit", where: "Street Dog Coalition clinic", addr: "242 Conifer St", meta: "Tuesdays 2–3 p.m. Six spots. Sign up at the front desk first. Leash.", phone: "(970) 494-9940" },
+      { id: "afa", task: "Low-cost shots or free pet food", where: "Animal Friends Alliance clinic", addr: "2321 E Mulberry St", meta: "Free pet food some Sundays and Mondays, 9–noon.", phone: "(970) 484-8516" },
+      { id: "am", task: "Optional: help with vet bills and supplies", where: "Annie and Millie's Place", meta: "Nonprofit that helps people keep their pets.", phone: "(720) 340-1268" }
+    ],
+    note: "Warm day = not in a closed car."
+  },
+  {
+    title: "Move-in money", plant: "Blue grama / Bouteloua gracilis", art: "grama",
+    prev: "Help with first month or deposit.", tag: ["form", "Short form / optional"],
+    intro: "Neighbor to Neighbor may cover a first month's rent or a deposit. A job helps. Limit: earning under about $60,100 a year.",
+    items: [
+      { id: "vm", task: "Leave a voicemail: name, number, \"move-in help\"", where: "Neighbor to Neighbor rent line", addr: "1550 Blue Spruce Dr", phone: "(970) 829-0296" },
+      { id: "docs", task: "Have a pay stub and ID ready for the callback" }
+    ]
+  },
+  {
+    title: "Overnight parking", plant: "Ponderosa pine / Pinus ponderosa", art: "pine",
+    prev: "Church lots with outlets and cameras. Dogs may be OK.", tag: ["form", "Application / optional"],
+    intro: "Parking overnight on Fort Collins city streets can get a ticket. These are reserved, legal spots run by churches.",
+    items: [
+      { id: "lsl", task: "Apply to Loveland SafeLot", where: "Loveland SafeLot Parking", meta: "About 20 min south. 6 p.m.–8 a.m. Outlets, porta-potty, night cameras. Showers and a hot meal two nights a week. Some pets OK, ask about yours. Needs an online application, background check, short interview, and a registered, insured car. Few spots.", phone: "(970) 685-4173", url: "https://lovelandsafelotparking.org/Become-a-SafeLot-Guest.php" },
+      { id: "fcl", task: "Watch for the Fort Collins church lot", where: "First United Methodist Church", addr: "1005 Stover St", meta: "Planned: up to 7 cars, 7 p.m.–7 a.m., pets OK in the car. City vote Nov 3, then applications open.", url: "https://www.firstchurchfc.org/safeparking" }
+    ]
+  },
+  {
+    title: "Mail, lockers, wifi", plant: "Big sagebrush / Artemisia tridentata", art: "sage",
+    prev: "One building. Free laundry too.", tag: ["form", "Short form / optional"],
+    intro: "One building, a lot of free practical stuff. Fill out a short form once, then use only what you want. All voluntary.",
+    items: [
+      { id: "call", task: "Call and ask if dogs can come inside", where: "Murphy Center", addr: "242 Conifer St", meta: "Mon–Fri 8–5.", phone: "(970) 494-9940" },
+      { id: "mail", task: "Set up a mailing address" },
+      { id: "laundry", task: "Laundry or shower (sign up 8–9 a.m.)" },
+      { id: "locker", task: "Get a locker" }
+    ]
+  }
+];
+
+const ORDER = ["Room w/ dog", "Let someone else search", "Move-in money", "Overnight parking", "The lease", "The dog", "Showers", "Food", "Mail, lockers, wifi"];
+const files = ORDER.map(t => allFiles.find(f => f.title === t));
+
+const pad = n => String(n + 1).padStart(2, "0");
+let checks = {};
+try { checks = JSON.parse(localStorage.getItem("ns-checks") || "{}") || {}; } catch (e) { checks = {}; }
+const save = () => { try { localStorage.setItem("ns-checks", JSON.stringify(checks)); } catch (e) {} };
+const key = (n, id) => n + ":" + id;
+const countDone = n => files[n].items.filter(it => checks[key(n, it.id)]).length;
+
+document.getElementById("hero").innerHTML = sketch("columbine", "hero");
+
+const list = document.getElementById("list");
+function renderList() {
+  list.innerHTML = files.map((f, n) => {
+    const d = countDone(n), t = f.items.length;
+    return `<li><button class="tile${d === t ? " all" : ""}" type="button" id="tile-${n}" data-i="${n}">
+      <span class="num">${pad(n)}</span>
+      <span class="t-main">
+        <span class="t-title">${f.title}</span>
+        <span class="t-prev">${f.prev}</span>
+        <span class="t-meta"><span class="tag ${f.tag[0]}">${f.tag[1]}</span><span class="prog${d ? " some" : ""}">${d}/${t} checked</span></span>
+      </span>
+      ${sketch(f.art)}
+    </button></li>`;
+  }).join("");
+}
+
+const $ = id => document.getElementById(id);
+const sheet = $("sheet");
+let cur = 0;
+
+function itemHTML(n, it) {
+  const k = key(n, it.id), cid = "c-" + n + "-" + it.id;
+  return `<div class="item">
+    <input type="checkbox" id="${cid}" data-k="${k}" ${checks[k] ? "checked" : ""}>
+    <label class="box" for="${cid}">${check}</label>
+    <div class="i-main">
+      <label class="task" for="${cid}">${it.task}</label>
+      ${it.where ? `<span class="where">${it.where}</span>` : ""}
+      ${it.meta ? `<span class="meta">${it.meta}</span>` : ""}
+      ${it.addr || it.phone || it.url ? `<div class="row">
+        ${it.addr ? `<a class="btn" href="${map(it.addr)}" target="_blank" rel="noopener">${it.addr} ↗</a>` : ""}
+        ${it.url ? `<a class="btn" href="${it.url}" target="_blank" rel="noopener">Website ↗</a>` : ""}
+        ${it.phone ? `<a class="btn solid call" href="tel:+1${it.phone.replace(/\D/g, "")}">Call ${it.phone}</a><button class="btn copy" type="button" data-copy="${it.phone}">Copy</button>` : ""}
+      </div>` : ""}
+    </div>
+  </div>`;
+}
+
+function open(n) {
+  cur = n; const f = files[n];
+  $("s-count").textContent = `File ${pad(n)} / ${pad(files.length - 1)} · ${countDone(n)}/${f.items.length}`;
+  $("s-num").textContent = pad(n);
+  $("s-art").innerHTML = sketch(f.art);
+  $("s-title").textContent = f.title;
+  $("s-plant").textContent = f.plant;
+  $("s-tag").className = "tag " + f.tag[0]; $("s-tag").textContent = f.tag[1];
+  $("s-body").innerHTML = (f.intro ? `<p>${f.intro}</p>` : "") + f.items.map(it => itemHTML(n, it)).join("") + (f.note ? `<p class="note">${f.note}</p>` : "");
+  $("prev").disabled = n === 0;
+  $("next").textContent = n === files.length - 1 ? "All files" : "Next →";
+  $("peek").textContent = n < files.length - 1 ? `Up next: ${pad(n + 1)} ${files[n + 1].title}` : "";
+  sheet.hidden = false; sheet.scrollTop = 0;
+}
+function close() { sheet.hidden = true; renderList(); const t = $("tile-" + cur); if (t) t.focus(); }
+
+list.addEventListener("click", e => { const t = e.target.closest(".tile"); if (t) open(+t.dataset.i); });
+$("close").onclick = close;
+$("prev").onclick = () => { if (cur > 0) open(cur - 1); };
+$("next").onclick = () => { cur === files.length - 1 ? close() : open(cur + 1); };
+document.addEventListener("keydown", e => { if (!sheet.hidden && e.key === "Escape") close(); });
+
+sheet.addEventListener("change", e => {
+  const c = e.target.closest("input[type=checkbox]"); if (!c) return;
+  c.checked ? (checks[c.dataset.k] = true) : delete checks[c.dataset.k];
+  save();
+  $("s-count").textContent = `File ${pad(cur)} / ${pad(files.length - 1)} · ${countDone(cur)}/${files[cur].items.length}`;
+});
+sheet.addEventListener("click", e => {
+  const b = e.target.closest(".copy"); if (!b) return;
+  const ok = () => { b.textContent = "Copied"; setTimeout(() => b.textContent = "Copy", 1500); };
+  try { navigator.clipboard.writeText(b.dataset.copy).then(ok, () => { b.textContent = "Press & hold number"; }); }
+  catch (err) { b.textContent = "Press & hold number"; }
+});
+
+let armed = false;
+$("reset").onclick = () => {
+  if (!armed) { armed = true; $("reset").textContent = "Tap again to clear"; setTimeout(() => { armed = false; $("reset").textContent = "Clear all checks"; }, 3000); return; }
+  checks = {}; save(); armed = false; $("reset").textContent = "Cleared"; renderList();
+  setTimeout(() => $("reset").textContent = "Clear all checks", 1500);
+};
+
+renderList();
+</script>
+</body></html>
