@@ -86,6 +86,25 @@ header p { grid-column: 1 / -1; margin: 6px 0 0; max-width: 32rem; }
 .prog.some { color: var(--green); font-weight: 700; }
 .tile.all .t-title { text-decoration: line-through; text-decoration-color: var(--green); text-decoration-thickness: 3px; }
 
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.mine { border-bottom: 3px solid var(--rule); padding-block: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.mine-top { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.mine-h { font-family: var(--display); font-weight: 400; font-size: 1.9rem; text-transform: uppercase; margin: 0; color: var(--green); }
+.mine-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.mine-form input { flex: 1 1 10rem; min-width: 0; font: 1rem var(--body); padding: 10px 12px; border: 1.5px solid var(--fg); background: var(--bg); color: var(--fg); border-radius: 0; }
+.mine-form input:focus-visible { outline: 3px solid var(--green); outline-offset: 1px; }
+.mine-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.mine-list li { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; border-top: 1.5px solid var(--rule); padding-block: 8px; position: relative; }
+.mine-list .task { font-weight: 600; min-width: 0; overflow-wrap: anywhere; }
+.mine-list input:checked ~ .task { text-decoration: line-through; text-decoration-color: var(--green); text-decoration-thickness: 2px; color: var(--muted); }
+.mine-list input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.mine-list input:checked + .box { background: var(--green); border-color: var(--green); }
+.mine-list input:checked + .box svg { opacity: 1; }
+.mine-list input:focus-visible + .box { outline: 3px solid var(--green); outline-offset: 2px; }
+.del { background: none; border: 0; color: var(--muted); font: 700 1.3rem var(--mono); cursor: pointer; padding: 4px 8px; }
+.del:focus-visible { outline: 3px solid var(--green); }
+.mine-empty { margin: 0; color: var(--muted); }
+.list-h { margin: 18px 0 0; }
 footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
 .reset { align-self: flex-start; }
 
@@ -149,10 +168,33 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
     <span id="hero"></span>
     <p>While the apartment gets sorted. Ten things, any order. Check things off as you go. Skip what doesn't apply.</p>
   </header>
+  <section class="mine" aria-labelledby="mine-h">
+    <div class="mine-top"><h2 id="mine-h" class="mine-h">My list</h2><span class="mono">Saves on this phone</span></div>
+    <form id="mine-form" class="mine-form">
+      <label for="mine-input" class="sr">Add a to-do</label>
+      <input id="mine-input" type="text" placeholder="Add a to-do, like &quot;call WoodSpring&quot;" autocomplete="off" maxlength="140">
+      <button class="btn solid" type="submit">Add</button>
+    </form>
+    <ul class="mine-list" id="mine-list"></ul>
+    <p class="mine-empty" id="mine-empty">Nothing here yet. Add anything you want to remember.</p>
+    <div class="row">
+      <a class="btn" id="mine-text" href="sms:">Text my list ↗</a>
+      <span id="fam"></span>
+    </div>
+    <form id="fam-form" class="mine-form" hidden>
+      <label for="fam-name" class="sr">Name</label>
+      <input id="fam-name" type="text" placeholder="Name, like Mom" maxlength="30" autocomplete="off">
+      <label for="fam-num" class="sr">Phone number</label>
+      <input id="fam-num" type="tel" placeholder="Phone number" maxlength="20" autocomplete="off">
+      <button class="btn solid" type="submit">Save</button>
+    </form>
+  </section>
+
+  <h2 class="mono list-h">The helpful list</h2>
   <ol class="list" id="list"></ol>
   <footer class="mono">
     <span>Hours and prices change. Call first.</span>
-    <span>Checkmarks save on this phone only. Nothing is sent anywhere.</span>
+    <span>Checkmarks and your list save on this phone only. Nothing is sent anywhere.</span>
     <button class="btn reset" id="reset" type="button">Clear all checks</button>
   </footer>
 </div>
@@ -410,5 +452,56 @@ $("reset").onclick = () => {
 };
 
 renderList();
+
+/* My list + family call, all saved on this phone only */
+const esc = t => String(t).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
+const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+let mine = load("ns-mine", []);
+let fam = load("ns-fam", null);
+
+function renderMine() {
+  $("mine-list").innerHTML = mine.map((m, i) => `<li>
+    <input type="checkbox" id="m-${m.id}" data-i="${i}" ${m.done ? "checked" : ""}>
+    <label class="box" for="m-${m.id}">${check}</label>
+    <label class="task" for="m-${m.id}">${esc(m.t)}</label>
+    <button class="del" type="button" data-del="${i}" aria-label="Delete ${esc(m.t)}">×</button>
+  </li>`).join("");
+  $("mine-empty").hidden = mine.length > 0;
+  const body = mine.length ? "My list:\n" + mine.map(m => (m.done ? "✓ " : "☐ ") + m.t).join("\n") : "My list is empty.";
+  $("mine-text").href = "sms:?&body=" + encodeURIComponent(body);
+}
+function renderFam() {
+  $("fam").innerHTML = fam
+    ? `<a class="btn solid" href="tel:${esc(fam.n.replace(/[^\d+]/g, ""))}">Call ${esc(fam.name)}</a> <button class="btn" type="button" id="fam-edit">Change</button>`
+    : `<button class="btn" type="button" id="fam-edit">+ Add a family number</button>`;
+}
+$("mine-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const t = $("mine-input").value.trim(); if (!t) return;
+  mine.push({ id: Date.now().toString(36), t, done: false }); store("ns-mine", mine);
+  $("mine-input").value = ""; renderMine(); $("mine-input").focus();
+});
+$("mine-list").addEventListener("change", e => {
+  const c = e.target.closest("input[type=checkbox]"); if (!c) return;
+  mine[+c.dataset.i].done = c.checked; store("ns-mine", mine); renderMine();
+});
+$("mine-list").addEventListener("click", e => {
+  const b = e.target.closest("[data-del]"); if (!b) return;
+  mine.splice(+b.dataset.del, 1); store("ns-mine", mine); renderMine();
+});
+$("fam").addEventListener("click", e => {
+  if (!e.target.closest("#fam-edit")) return;
+  $("fam-form").hidden = false;
+  $("fam-name").value = fam ? fam.name : ""; $("fam-num").value = fam ? fam.n : "";
+  $("fam-name").focus();
+});
+$("fam-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const name = $("fam-name").value.trim(), n = $("fam-num").value.trim();
+  if (!name || n.replace(/\D/g, "").length < 7) { $("fam-num").focus(); return; }
+  fam = { name, n }; store("ns-fam", fam); $("fam-form").hidden = true; renderFam();
+});
+renderMine(); renderFam();
 </script>
 </body></html>
