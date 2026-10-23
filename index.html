@@ -70,7 +70,7 @@ header p { grid-column: 1 / -1; margin: 6px 0 0; max-width: 32rem; }
 .list { list-style: none; margin: 0; padding: 0; }
 .tile {
   width: 100%; text-align: left; background: none; color: inherit; border: 0; border-bottom: 1.5px solid var(--rule);
-  padding: 14px 0; display: grid; grid-template-columns: 2.8rem 1fr 56px; gap: 4px 12px; align-items: center; cursor: pointer; font: inherit;
+  padding: 14px 0; display: grid; grid-template-columns: 1fr 56px; gap: 4px 12px; align-items: center; cursor: pointer; font: inherit;
 }
 .tile:hover .t-title, .tile:focus-visible .t-title { color: var(--green); }
 .tile:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
@@ -104,7 +104,14 @@ header p { grid-column: 1 / -1; margin: 6px 0 0; max-width: 32rem; }
 .del { background: none; border: 0; color: var(--muted); font: 700 1.3rem var(--mono); cursor: pointer; padding: 4px 8px; }
 .del:focus-visible { outline: 3px solid var(--green); }
 .mine-empty { margin: 0; color: var(--muted); }
-.list-h { margin: 18px 0 0; }
+.list-h { margin: 0; }
+.list-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.list-bar .row { margin: 0; }
+.row-li { display: flex; align-items: center; gap: 8px; border-bottom: 1.5px solid var(--rule); }
+.row-li .tile { border-bottom: 0; flex: 1; min-width: 0; }
+.mv { display: flex; flex-direction: column; gap: 6px; }
+.mv .btn { padding: 8px 12px; font-size: 1rem; }
+.mv .btn:disabled { opacity: 0.25; cursor: default; }
 footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
 .reset { align-self: flex-start; }
 
@@ -123,7 +130,7 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
 }
 .btn.solid { background: var(--fg); color: var(--bg); }
 .btn:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
-.s-head { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+.s-head { display: flex; justify-content: flex-start; }
 .s-num { font-family: var(--display); font-size: clamp(4.5rem, 26vw, 8rem); line-height: 0.85; }
 .s-head .flora { width: clamp(96px, 30vw, 150px); height: auto; }
 .s-title { font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 10vw, 3.4rem); line-height: 0.95; text-transform: uppercase; margin: 0; text-wrap: balance; }
@@ -166,7 +173,7 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
     <div class="top mono"><span>Fort Collins / Helpful list</span><span>Rev. 10.23.26</span></div>
     <h1>Next<br>Steps</h1>
     <span id="hero"></span>
-    <p>While the apartment gets sorted. Ten things, any order. Check things off as you go. Skip what doesn't apply.</p>
+    <p>While the apartment gets sorted. Eleven things, any order. Tap Reorder to put them your way. Check things off as you go. Skip what doesn't apply.</p>
   </header>
   <section class="mine" aria-labelledby="mine-h">
     <div class="mine-top"><h2 id="mine-h" class="mine-h">My list</h2><span class="mono">Saves on this phone</span></div>
@@ -190,7 +197,7 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
     </form>
   </section>
 
-  <h2 class="mono list-h">The helpful list</h2>
+  <div class="list-bar"><h2 class="mono list-h">The helpful list</h2><span class="row"><button class="btn" type="button" id="reset-order" hidden>Reset</button><button class="btn" type="button" id="reorder">Reorder</button></span></div>
   <ol class="list" id="list"></ol>
   <footer class="mono">
     <span>Hours and prices change. Call first.</span>
@@ -205,7 +212,7 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
       <button class="btn" id="close" type="button">← Full list</button>
       <span class="mono" id="s-count"></span>
     </div>
-    <div class="s-head"><div class="s-num" id="s-num" aria-hidden="true"></div><div id="s-art"></div></div>
+    <div class="s-head"><div id="s-art"></div></div>
     <h2 class="s-title" id="s-title"></h2>
     <span class="plant" id="s-plant"></span>
     <div><span class="tag" id="s-tag"></span></div>
@@ -230,6 +237,7 @@ const ART = {
   pine: `<path d="M38 76c2-10 4-22 2-34"/><path d="M40 42c-2-10-8-18-16-22M40 42c0-10-2-20-6-28M40 42c2-10 4-20 10-26M40 42c4-8 10-14 18-16M40 42c-6-6-14-8-22-6"/><path d="M38 58c-6-2-12 0-14 4M39 56c6-3 11-1 13 3"/><ellipse cx="50" cy="66" rx="5" ry="7"/><path d="M46 63h8M45 67h10M47 71h6"/>`,
   rabbitbrush: `<path d="M40 76c0-10 0-18 0-26M40 64c-6-6-12-14-14-26M40 64c6-6 12-14 14-26M40 56c-3-8-6-16-6-26M40 56c3-8 6-16 6-26M40 50c0-8 0-16 0-24"/><path d="M26 38c-2-3 0-6 2-6 2 1 2 4-2 6zM54 38c2-3 0-6-2-6-2 1-2 4 2 6zM34 30c-2-3 0-6 2-6 2 1 2 4-2 6zM46 30c2-3 0-6-2-6-2 1-2 4 2 6zM40 26c-2-3 0-6 0-6 2 0 2 3 0 6z"/><path d="M24 76h32"/>`,
   penstemon: `<path d="M40 76c0-14 1-30-1-50"/><path d="M39 30c-6-1-9-5-8-9 4 0 7 4 8 9zM40 38c6-1 9-5 8-9-4 0-7 4-8 9zM39 46c-6-1-9-5-8-9 4 0 7 4 8 9zM40 54c6-1 9-5 8-9-4 0-7 4-8 9z"/><path d="M31 21l-2-2M48 29l2-2M31 37l-2-2M48 45l2-2"/><path d="M40 66c-8-2-12-8-12-12M40 62c8-2 12-8 12-12"/><path d="M26 76h28"/>`,
+  rose: `<path d="M40 76c0-12 2-24 0-36"/><circle cx="40" cy="30" r="5"/><path d="M40 25c-4-8 4-12 6-6M45 30c8-3 11 5 5 7M43 35c4 8-4 11-6 5M35 34c-8 3-11-5-5-7M36 26c-5-6 1-11 5-6"/><path d="M40 58c-8-1-13-6-13-11 6 0 11 4 13 11zM40 50c7-2 11-7 10-12-5 1-9 5-10 12z"/><path d="M38 66l-3-2M42 62l3-2"/><path d="M26 76h28"/>`,
   sage: `<path d="M40 76c0-16-2-30 2-46"/><path d="M41 62c-8-2-12-8-12-14M41 62c7-3 11-9 10-15M41 48c-7-2-10-7-10-12M41 48c6-3 9-8 8-13M42 36c-5-2-7-6-6-10M42 36c5-2 7-6 6-10"/><path d="M29 48c-3-1-4-3-3-5M51 47c3-1 4-3 3-5M31 36c-3-1-3-3-2-5M49 35c3-1 3-3 2-5"/><path d="M42 30c0-6 1-10 0-14"/>`
 };
 const sketch = (k, cls = "") => `<svg class="flora ${cls}" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#pencil)">${ART[k]}</g></svg>`;
@@ -239,6 +247,17 @@ const prof = it => "https://www.google.com/maps/search/?api=1&query=" + encodeUR
 const map = a => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(/Loveland/.test(a) ? a + ", CO" : a + ", Fort Collins, CO");
 
 const allFiles = [
+  {
+    title: "Family's got you", plant: "Wild rose / Rosa woodsii", art: "rose",
+    prev: "Money, calls, a place to stay. Just ask.", tag: ["easy", "No forms / just ask"],
+    intro: "Family has offered to help, no strings. Use any of these, any time.",
+    items: [
+      { id: "money", task: "Ask for money", meta: "A hotel week, a deposit, first month's rent, an oil change. Whatever helps." },
+      { id: "calls", task: "Ask family to make calls for you", meta: "Send the name and number from this list. Family can call, ask the questions and report back." },
+      { id: "stay", task: "A place to stay", meta: "Family's door is open, for a night or longer." },
+      { id: "list", task: "Send what you need", meta: "Use \"Text my list\" at the top, or the Call button once you save a family number." }
+    ]
+  },
   {
     title: "Room w/ dog", plant: "Prickly pear / Opuntia polyacantha", art: "pricklypear",
     prev: "Weekly hotels, studios and monthly rentals. No lease. Dog stays.", tag: ["easy", "No forms / just check in"],
@@ -358,14 +377,19 @@ const allFiles = [
   }
 ];
 
-const ORDER = ["Room w/ dog", "Let someone else search", "Move-in money", "Overnight parking", "The lease", "The dog", "Showers", "Food", "Mail, lockers, wifi", "Loose ends"];
-const files = ORDER.map(t => allFiles.find(f => f.title === t));
+const ORDER = ["Room w/ dog", "Family's got you", "Let someone else search", "Move-in money", "Overnight parking", "The lease", "The dog", "Showers", "Food", "Mail, lockers, wifi", "Loose ends"];
+let saved = [];
+try { saved = JSON.parse(localStorage.getItem("ns-order") || "[]") || []; } catch (e) { saved = []; }
+const valid = saved.filter(t => ORDER.includes(t));
+let files = [...valid, ...ORDER.filter(t => !valid.includes(t))].map(t => allFiles.find(f => f.title === t));
+const saveOrder = () => { try { localStorage.setItem("ns-order", JSON.stringify(files.map(f => f.title))); } catch (e) {} };
+let reorder = false;
 
 const pad = n => String(n + 1).padStart(2, "0");
 let checks = {};
-try { checks = JSON.parse(localStorage.getItem("ns-checks") || "{}") || {}; } catch (e) { checks = {}; }
-const save = () => { try { localStorage.setItem("ns-checks", JSON.stringify(checks)); } catch (e) {} };
-const key = (n, id) => n + ":" + id;
+try { checks = JSON.parse(localStorage.getItem("ns-checks2") || "{}") || {}; } catch (e) { checks = {}; }
+const save = () => { try { localStorage.setItem("ns-checks2", JSON.stringify(checks)); } catch (e) {} };
+const key = (n, id) => files[n].title + ":" + id;
 const countDone = n => files[n].items.filter(it => checks[key(n, it.id)]).length;
 
 document.getElementById("hero").innerHTML = sketch("columbine", "hero");
@@ -374,15 +398,17 @@ const list = document.getElementById("list");
 function renderList() {
   list.innerHTML = files.map((f, n) => {
     const d = countDone(n), t = f.items.length;
-    return `<li><button class="tile${d === t ? " all" : ""}" type="button" id="tile-${n}" data-i="${n}">
-      <span class="num">${pad(n)}</span>
+    return `<li class="row-li"><button class="tile${d === t ? " all" : ""}" type="button" id="tile-${n}" data-i="${n}">
       <span class="t-main">
         <span class="t-title">${f.title}</span>
         <span class="t-prev">${f.prev}</span>
         <span class="t-meta"><span class="tag ${f.tag[0]}">${f.tag[1]}</span><span class="prog${d ? " some" : ""}">${d}/${t} checked</span></span>
       </span>
       ${sketch(f.art)}
-    </button></li>`;
+    </button>${reorder ? `<span class="mv">
+      <button class="btn" type="button" data-up="${n}" aria-label="Move ${f.title} up" ${n === 0 ? "disabled" : ""}>↑</button>
+      <button class="btn" type="button" data-down="${n}" aria-label="Move ${f.title} down" ${n === files.length - 1 ? "disabled" : ""}>↓</button>
+    </span>` : ""}</li>`;
   }).join("");
 }
 
@@ -411,8 +437,7 @@ function itemHTML(n, it) {
 
 function open(n) {
   cur = n; const f = files[n];
-  $("s-count").textContent = `No. ${pad(n)} of ${files.length} · ${countDone(n)}/${f.items.length} done`;
-  $("s-num").textContent = pad(n);
+  $("s-count").textContent = `${countDone(n)}/${f.items.length} done`;
   $("s-art").innerHTML = sketch(f.art);
   $("s-title").textContent = f.title;
   $("s-plant").textContent = f.plant;
@@ -420,12 +445,31 @@ function open(n) {
   $("s-body").innerHTML = (f.intro ? `<p>${f.intro}</p>` : "") + f.items.map(it => itemHTML(n, it)).join("") + (f.note ? `<p class="note">${f.note}</p>` : "");
   $("prev").disabled = n === 0;
   $("next").textContent = n === files.length - 1 ? "Full list" : "Next →";
-  $("peek").textContent = n < files.length - 1 ? `Up next: ${pad(n + 1)} ${files[n + 1].title}` : "";
+  $("peek").textContent = n < files.length - 1 ? `Up next: ${files[n + 1].title}` : "";
   sheet.hidden = false; sheet.scrollTop = 0;
 }
 function close() { sheet.hidden = true; renderList(); const t = $("tile-" + cur); if (t) t.focus(); }
 
-list.addEventListener("click", e => { const t = e.target.closest(".tile"); if (t) open(+t.dataset.i); });
+list.addEventListener("click", e => {
+  const up = e.target.closest("[data-up]"), dn = e.target.closest("[data-down]");
+  if (up || dn) {
+    const i = +(up ? up.dataset.up : dn.dataset.down), j = up ? i - 1 : i + 1;
+    if (j < 0 || j >= files.length) return;
+    [files[i], files[j]] = [files[j], files[i]]; saveOrder(); renderList();
+    const again = list.querySelector(up ? `[data-up="${j}"]` : `[data-down="${j}"]`) || list.querySelector(`[data-${up ? "down" : "up"}="${j}"]`);
+    if (again) again.focus();
+    return;
+  }
+  const t = e.target.closest(".tile"); if (t && !reorder) open(+t.dataset.i);
+});
+$("reorder").onclick = () => {
+  reorder = !reorder;
+  $("reorder").textContent = reorder ? "Done" : "Reorder";
+  $("reorder").className = reorder ? "btn solid" : "btn";
+  $("reset-order").hidden = !reorder;
+  renderList();
+};
+$("reset-order").onclick = () => { files = ORDER.map(t => allFiles.find(f => f.title === t)); saveOrder(); renderList(); };
 $("close").onclick = close;
 $("prev").onclick = () => { if (cur > 0) open(cur - 1); };
 $("next").onclick = () => { cur === files.length - 1 ? close() : open(cur + 1); };
@@ -435,7 +479,7 @@ sheet.addEventListener("change", e => {
   const c = e.target.closest("input[type=checkbox]"); if (!c) return;
   c.checked ? (checks[c.dataset.k] = true) : delete checks[c.dataset.k];
   save();
-  $("s-count").textContent = `No. ${pad(cur)} of ${files.length} · ${countDone(cur)}/${files[cur].items.length} done`;
+  $("s-count").textContent = `${countDone(cur)}/${files[cur].items.length} done`;
 });
 sheet.addEventListener("click", e => {
   const b = e.target.closest(".copy"); if (!b) return;
