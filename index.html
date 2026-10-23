@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Fort Collins, one step at a time: a room with your dog, help searching, move-in money, parking, showers, food and a free vet.">
+<meta name="description" content="Fort Collins helpful list: a room with your dog, help searching, move-in money, parking, showers, food, a free vet and loose ends.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Next Steps">
 <meta property="og:description" content="A room with your dog, help searching, move-in money, parking, showers, food and a free vet. Fort Collins, one checklist.">
@@ -13,6 +13,15 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://clipboard250.github.io/next-steps/og-image.png">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Next Steps">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#1E7A3C">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Next Steps</title>
@@ -135,10 +144,10 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
 
 <div class="wrap" id="index">
   <header>
-    <div class="top mono"><span>Fort Collins / Field index</span><span>Rev. 10.23.26</span></div>
+    <div class="top mono"><span>Fort Collins / Helpful list</span><span>Rev. 10.23.26</span></div>
     <h1>Next<br>Steps</h1>
     <span id="hero"></span>
-    <p>While the apartment gets sorted. Nine files, any order. Check things off as you go. Skip what doesn't apply.</p>
+    <p>While the apartment gets sorted. Ten things, any order. Check things off as you go. Skip what doesn't apply.</p>
   </header>
   <ol class="list" id="list"></ol>
   <footer class="mono">
@@ -151,7 +160,7 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="s-title">
   <div class="wrap">
     <div class="bar">
-      <button class="btn" id="close" type="button">← All files</button>
+      <button class="btn" id="close" type="button">← Full list</button>
       <span class="mono" id="s-count"></span>
     </div>
     <div class="s-head"><div class="s-num" id="s-num" aria-hidden="true"></div><div id="s-art"></div></div>
@@ -178,6 +187,7 @@ const ART = {
   grama: `<path d="M30 76c0-16 2-28 8-40M38 76c0-18 4-30 12-42M46 76c0-12-2-22-8-30M24 76c2-10 0-18-6-24M52 76c2-10 6-18 12-22"/><path d="M38 36c4-2 9-1 12 3M50 34c4-3 9-3 12 1"/><path d="M40 35l1 3M43 34l1 3M46 35l1 3M52 33l1 3M55 32l1 3M58 33l1 3"/>`,
   pine: `<path d="M38 76c2-10 4-22 2-34"/><path d="M40 42c-2-10-8-18-16-22M40 42c0-10-2-20-6-28M40 42c2-10 4-20 10-26M40 42c4-8 10-14 18-16M40 42c-6-6-14-8-22-6"/><path d="M38 58c-6-2-12 0-14 4M39 56c6-3 11-1 13 3"/><ellipse cx="50" cy="66" rx="5" ry="7"/><path d="M46 63h8M45 67h10M47 71h6"/>`,
   rabbitbrush: `<path d="M40 76c0-10 0-18 0-26M40 64c-6-6-12-14-14-26M40 64c6-6 12-14 14-26M40 56c-3-8-6-16-6-26M40 56c3-8 6-16 6-26M40 50c0-8 0-16 0-24"/><path d="M26 38c-2-3 0-6 2-6 2 1 2 4-2 6zM54 38c2-3 0-6-2-6-2 1-2 4 2 6zM34 30c-2-3 0-6 2-6 2 1 2 4-2 6zM46 30c2-3 0-6-2-6-2 1-2 4 2 6zM40 26c-2-3 0-6 0-6 2 0 2 3 0 6z"/><path d="M24 76h32"/>`,
+  penstemon: `<path d="M40 76c0-14 1-30-1-50"/><path d="M39 30c-6-1-9-5-8-9 4 0 7 4 8 9zM40 38c6-1 9-5 8-9-4 0-7 4-8 9zM39 46c-6-1-9-5-8-9 4 0 7 4 8 9zM40 54c6-1 9-5 8-9-4 0-7 4-8 9z"/><path d="M31 21l-2-2M48 29l2-2M31 37l-2-2M48 45l2-2"/><path d="M40 66c-8-2-12-8-12-12M40 62c8-2 12-8 12-12"/><path d="M26 76h28"/>`,
   sage: `<path d="M40 76c0-16-2-30 2-46"/><path d="M41 62c-8-2-12-8-12-14M41 62c7-3 11-9 10-15M41 48c-7-2-10-7-10-12M41 48c6-3 9-8 8-13M42 36c-5-2-7-6-6-10M42 36c5-2 7-6 6-10"/><path d="M29 48c-3-1-4-3-3-5M51 47c3-1 4-3 3-5M31 36c-3-1-3-3-2-5M49 35c3-1 3-3 2-5"/><path d="M42 30c0-6 1-10 0-14"/>`
 };
 const sketch = (k, cls = "") => `<svg class="flora ${cls}" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#pencil)">${ART[k]}</g></svg>`;
@@ -287,10 +297,26 @@ const allFiles = [
       { id: "laundry", task: "Laundry or shower (sign up 8–9 a.m.)" },
       { id: "locker", task: "Get a locker" }
     ]
+  },
+  {
+    title: "Loose ends", plant: "Rocky Mountain penstemon / Penstemon strictus", art: "penstemon",
+    prev: "Lost card, oil change, ID, car paperwork, little stuff.", tag: ["easy", "As needed"],
+    intro: "The small stuff that piles up during a move. Do whichever ones apply.",
+    items: [
+      { id: "card", task: "Replace a lost debit card", meta: "Freeze it in your bank's app first, then order a new one there or call the number on the bank's website. Most mail one in 5–7 days. Some branches print one same day." },
+      { id: "oil1", task: "Oil change, no upsell", pid: "ChIJrynbu4dKaYcR9VkOa-DzHeI", where: "Pro Quick Lube", addr: "825 N College Ave", meta: "One-man shop. Honest, fast, no pressure. Mon–Thu 9–5.", phone: "(970) 825-6992" },
+      { id: "oil2", task: "Or oil change any day", pid: "ChIJDbbdnIlKaYcRZXWEQOfH8gE", where: "Valvoline Instant Oil Change", addr: "410 N College Ave", meta: "Open 7 days. In and out in about 15 minutes.", phone: "(970) 398-3894" },
+      { id: "reg", task: "Car registration current", pid: "ChIJ68Ml-19KaYcRP6VqMQ2JgjA", where: "Larimer County Vehicle Licensing", addr: "200 W Oak St #1100", meta: "Renew online or check in online before going. Needed for any parking lot program.", phone: "(970) 498-7878" },
+      { id: "ins", task: "Car insurance card current and saved as a photo" },
+      { id: "dl", task: "Replace a lost driver's license or ID", pid: "ChIJXWirGHVLaYcRjzZ_lpYNTlA", where: "Colorado DMV, Fort Collins", addr: "3030 S College Ave Ste 100", meta: "Try online first, it skips the line. In person needs an appointment, and they book up.", phone: "(970) 494-9806", url: "https://mydmv.colorado.gov" },
+      { id: "vax", task: "Dog's vaccine records saved as a photo", meta: "Hotels and landlords ask for them." },
+      { id: "mail", task: "A mailing address for the new card and mail", meta: "The Murphy Center takes personal mail after a short form, or rent a box at a UPS Store." },
+      { id: "renters", task: "Renter's insurance for the new place", meta: "Often about $15 a month. Many leases require it." }
+    ]
   }
 ];
 
-const ORDER = ["Room w/ dog", "Let someone else search", "Move-in money", "Overnight parking", "The lease", "The dog", "Showers", "Food", "Mail, lockers, wifi"];
+const ORDER = ["Room w/ dog", "Let someone else search", "Move-in money", "Overnight parking", "The lease", "The dog", "Showers", "Food", "Mail, lockers, wifi", "Loose ends"];
 const files = ORDER.map(t => allFiles.find(f => f.title === t));
 
 const pad = n => String(n + 1).padStart(2, "0");
@@ -343,7 +369,7 @@ function itemHTML(n, it) {
 
 function open(n) {
   cur = n; const f = files[n];
-  $("s-count").textContent = `File ${pad(n)} / ${pad(files.length - 1)} · ${countDone(n)}/${f.items.length}`;
+  $("s-count").textContent = `No. ${pad(n)} of ${files.length} · ${countDone(n)}/${f.items.length} done`;
   $("s-num").textContent = pad(n);
   $("s-art").innerHTML = sketch(f.art);
   $("s-title").textContent = f.title;
@@ -351,7 +377,7 @@ function open(n) {
   $("s-tag").className = "tag " + f.tag[0]; $("s-tag").textContent = f.tag[1];
   $("s-body").innerHTML = (f.intro ? `<p>${f.intro}</p>` : "") + f.items.map(it => itemHTML(n, it)).join("") + (f.note ? `<p class="note">${f.note}</p>` : "");
   $("prev").disabled = n === 0;
-  $("next").textContent = n === files.length - 1 ? "All files" : "Next →";
+  $("next").textContent = n === files.length - 1 ? "Full list" : "Next →";
   $("peek").textContent = n < files.length - 1 ? `Up next: ${pad(n + 1)} ${files[n + 1].title}` : "";
   sheet.hidden = false; sheet.scrollTop = 0;
 }
@@ -367,7 +393,7 @@ sheet.addEventListener("change", e => {
   const c = e.target.closest("input[type=checkbox]"); if (!c) return;
   c.checked ? (checks[c.dataset.k] = true) : delete checks[c.dataset.k];
   save();
-  $("s-count").textContent = `File ${pad(cur)} / ${pad(files.length - 1)} · ${countDone(cur)}/${files[cur].items.length}`;
+  $("s-count").textContent = `No. ${pad(cur)} of ${files.length} · ${countDone(cur)}/${files[cur].items.length} done`;
 });
 sheet.addEventListener("click", e => {
   const b = e.target.closest(".copy"); if (!b) return;
