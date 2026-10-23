@@ -104,14 +104,18 @@ header p { grid-column: 1 / -1; margin: 6px 0 0; max-width: 32rem; }
 .del { background: none; border: 0; color: var(--muted); font: 700 1.3rem var(--mono); cursor: pointer; padding: 4px 8px; }
 .del:focus-visible { outline: 3px solid var(--green); }
 .mine-empty { margin: 0; color: var(--muted); }
+.mine-note { margin: 0; max-width: 34rem; }
 .list-h { margin: 0; }
 .list-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
 .list-bar .row { margin: 0; }
 .row-li { display: flex; align-items: center; gap: 8px; border-bottom: 1.5px solid var(--rule); }
 .row-li .tile { border-bottom: 0; flex: 1; min-width: 0; }
-.mv { display: flex; flex-direction: column; gap: 6px; }
-.mv .btn { padding: 8px 12px; font-size: 1rem; }
-.mv .btn:disabled { opacity: 0.25; cursor: default; }
+.grip { flex: none; width: 44px; height: 56px; display: grid; place-items: center; background: none; border: 0; cursor: grab; touch-action: none; color: var(--muted); padding: 0; }
+.grip svg { width: 16px; height: 24px; fill: currentColor; }
+.grip:hover, .grip:focus-visible { color: var(--green); }
+.grip:focus-visible { outline: 3px solid var(--green); outline-offset: 2px; }
+.dragging { background: var(--green-soft); box-shadow: 0 8px 24px rgba(0,0,0,0.18); }
+.grip:active { cursor: grabbing; }
 footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
 .reset { align-self: flex-start; }
 
@@ -173,10 +177,11 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
     <div class="top mono"><span>Fort Collins / Helpful list</span><span>Rev. 10.23.26</span></div>
     <h1>Next<br>Steps</h1>
     <span id="hero"></span>
-    <p>While the apartment gets sorted. Eleven things, any order. Tap Reorder to put them your way. Check things off as you go. Skip what doesn't apply.</p>
+    <p>While the apartment gets sorted. Eleven things, any order. Drag the dots to put them your way. Check things off as you go. Skip what doesn't apply.</p>
   </header>
   <section class="mine" aria-labelledby="mine-h">
-    <div class="mine-top"><h2 id="mine-h" class="mine-h">My list</h2><span class="mono">Saves on this phone</span></div>
+    <div class="mine-top"><h2 id="mine-h" class="mine-h">My list</h2><span class="mono">Only you see it</span></div>
+    <p class="mine-note">Your own to-dos, in your own words. Type anything you want to remember, check it off when it's done. It stays on this phone.</p>
     <form id="mine-form" class="mine-form">
       <label for="mine-input" class="sr">Add a to-do</label>
       <input id="mine-input" type="text" placeholder="Add a to-do, like &quot;call WoodSpring&quot;" autocomplete="off" maxlength="140">
@@ -197,8 +202,9 @@ footer { margin-top: 20px; color: var(--muted); display: flex; flex-direction: c
     </form>
   </section>
 
-  <div class="list-bar"><h2 class="mono list-h">The helpful list</h2><span class="row"><button class="btn" type="button" id="reset-order" hidden>Reset</button><button class="btn" type="button" id="reorder">Reorder</button></span></div>
+  <div class="list-bar"><h2 class="mono list-h">The helpful list</h2><button class="btn" type="button" id="reset-order" hidden>Reset order</button></div>
   <ol class="list" id="list"></ol>
+
   <footer class="mono">
     <span>Hours and prices change. Call first.</span>
     <span>Checkmarks and your list save on this phone only. Nothing is sent anywhere.</span>
@@ -383,7 +389,7 @@ try { saved = JSON.parse(localStorage.getItem("ns-order") || "[]") || []; } catc
 const valid = saved.filter(t => ORDER.includes(t));
 let files = [...valid, ...ORDER.filter(t => !valid.includes(t))].map(t => allFiles.find(f => f.title === t));
 const saveOrder = () => { try { localStorage.setItem("ns-order", JSON.stringify(files.map(f => f.title))); } catch (e) {} };
-let reorder = false;
+
 
 const pad = n => String(n + 1).padStart(2, "0");
 let checks = {};
@@ -405,10 +411,7 @@ function renderList() {
         <span class="t-meta"><span class="tag ${f.tag[0]}">${f.tag[1]}</span><span class="prog${d ? " some" : ""}">${d}/${t} checked</span></span>
       </span>
       ${sketch(f.art)}
-    </button>${reorder ? `<span class="mv">
-      <button class="btn" type="button" data-up="${n}" aria-label="Move ${f.title} up" ${n === 0 ? "disabled" : ""}>↑</button>
-      <button class="btn" type="button" data-down="${n}" aria-label="Move ${f.title} down" ${n === files.length - 1 ? "disabled" : ""}>↓</button>
-    </span>` : ""}</li>`;
+    </button><button class="grip" type="button" data-g="${n}" aria-label="Drag to move ${f.title}. Or use the up and down arrow keys."><svg viewBox="0 0 20 28" aria-hidden="true"><circle cx="6" cy="6" r="2.4"/><circle cx="14" cy="6" r="2.4"/><circle cx="6" cy="14" r="2.4"/><circle cx="14" cy="14" r="2.4"/><circle cx="6" cy="22" r="2.4"/><circle cx="14" cy="22" r="2.4"/></svg></button></li>`;
   }).join("");
 }
 
@@ -450,26 +453,59 @@ function open(n) {
 }
 function close() { sheet.hidden = true; renderList(); const t = $("tile-" + cur); if (t) t.focus(); }
 
+const isDefault = () => files.every((f, i) => f.title === ORDER[i]);
+const syncReset = () => { $("reset-order").hidden = isDefault(); };
+function moveFile(i, j) {
+  if (j < 0 || j >= files.length || i === j) return;
+  const [f] = files.splice(i, 1); files.splice(j, 0, f); saveOrder(); renderList(); syncReset();
+}
 list.addEventListener("click", e => {
-  const up = e.target.closest("[data-up]"), dn = e.target.closest("[data-down]");
-  if (up || dn) {
-    const i = +(up ? up.dataset.up : dn.dataset.down), j = up ? i - 1 : i + 1;
-    if (j < 0 || j >= files.length) return;
-    [files[i], files[j]] = [files[j], files[i]]; saveOrder(); renderList();
-    const again = list.querySelector(up ? `[data-up="${j}"]` : `[data-down="${j}"]`) || list.querySelector(`[data-${up ? "down" : "up"}="${j}"]`);
-    if (again) again.focus();
-    return;
-  }
-  const t = e.target.closest(".tile"); if (t && !reorder) open(+t.dataset.i);
+  if (e.target.closest(".grip")) return;
+  const t = e.target.closest(".tile"); if (t) open(+t.dataset.i);
 });
-$("reorder").onclick = () => {
-  reorder = !reorder;
-  $("reorder").textContent = reorder ? "Done" : "Reorder";
-  $("reorder").className = reorder ? "btn solid" : "btn";
-  $("reset-order").hidden = !reorder;
-  renderList();
+list.addEventListener("keydown", e => {
+  const g = e.target.closest(".grip"); if (!g) return;
+  const i = +g.dataset.g, j = e.key === "ArrowUp" ? i - 1 : e.key === "ArrowDown" ? i + 1 : null;
+  if (j === null) return;
+  e.preventDefault(); moveFile(i, j);
+  const again = list.querySelector(`[data-g="${Math.max(0, Math.min(files.length - 1, j))}"]`); if (again) again.focus();
+});
+/* Drag by the dots, like reordering stops in a map app */
+let drag = null;
+list.addEventListener("pointerdown", e => {
+  const g = e.target.closest(".grip"); if (!g) return;
+  e.preventDefault();
+  const li = g.closest("li"); const r = li.getBoundingClientRect();
+  drag = { li, from: +g.dataset.g, offset: e.clientY - r.top, id: e.pointerId };
+  li.classList.add("dragging"); li.style.position = "relative"; li.style.zIndex = 5;
+});
+window.addEventListener("pointermove", e => {
+  if (!drag || e.pointerId !== drag.id) return;
+  const items = [...list.children];
+  const y = e.clientY;
+  // live reorder: find where the pointer sits among the other rows
+  let target = null;
+  for (const el of items) {
+    if (el === drag.li) continue;
+    const r = el.getBoundingClientRect();
+    if (y < r.top + r.height / 2) { target = el; break; }
+  }
+  if (target !== drag.li.nextElementSibling) list.insertBefore(drag.li, target);
+  const natural = drag.li.getBoundingClientRect().top - (drag.ty || 0);
+  drag.ty = y - drag.offset - natural;
+  drag.li.style.transform = `translateY(${drag.ty}px)`;
+});
+const endDrag = e => {
+  if (!drag || (e.pointerId !== undefined && e.pointerId !== drag.id)) return;
+  const to = [...list.children].indexOf(drag.li);
+  drag.li.style.transform = ""; drag.li.classList.remove("dragging");
+  const from = drag.from; drag = null;
+  if (to !== from) moveFile(from, to); else renderList();
 };
-$("reset-order").onclick = () => { files = ORDER.map(t => allFiles.find(f => f.title === t)); saveOrder(); renderList(); };
+window.addEventListener("pointerup", endDrag);
+window.addEventListener("pointercancel", endDrag);
+$("reset-order").onclick = () => { files = ORDER.map(t => allFiles.find(f => f.title === t)); saveOrder(); renderList(); syncReset(); };
+syncReset();
 $("close").onclick = close;
 $("prev").onclick = () => { if (cur > 0) open(cur - 1); };
 $("next").onclick = () => { cur === files.length - 1 ? close() : open(cur + 1); };
