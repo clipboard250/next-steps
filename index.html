@@ -183,6 +183,7 @@ const ART = {
 const sketch = (k, cls = "") => `<svg class="flora ${cls}" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#pencil)">${ART[k]}</g></svg>`;
 const check = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>`;
 
+const prof = it => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(it.where) + "&query_place_id=" + it.pid;
 const map = a => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(/Loveland/.test(a) ? a + ", CO" : a + ", Fort Collins, CO");
 
 const allFiles = [
@@ -191,12 +192,12 @@ const allFiles = [
     prev: "Weekly hotels, studios and monthly rentals. No lease. Dog stays.", tag: ["easy", "No forms / just check in"],
     intro: "Pay by the week, extend by the week. The fastest way indoors with the dog.",
     items: [
-      { id: "ws", task: "Call WoodSpring for the weekly price", where: "WoodSpring Suites", addr: "847 SE Frontage Rd", meta: "Kitchen in the room. Guest laundry. Dogs to 75 lb: $50 per stay + $10/night. Card only.", phone: "(970) 460-4436" , url: "https://www.woodspring.com/extended-stay-hotels/locations/colorado/fort-collins/woodspring-suites-fort-collins" },
-      { id: "ri", task: "Backup: Residence Inn", where: "Residence Inn", addr: "1127 Oakridge Dr", meta: "Nicer, pricier. Dogs to 100 lb. About $150 dog fee for 5+ nights.", phone: "(970) 223-5700" , url: "https://www.marriott.com/en-us/hotels/ftcri-residence-inn-fort-collins/overview/" },
-      { id: "h2", task: "Backup: Home2 Suites", where: "Home2 Suites", addr: "4715 S Timberline Rd", meta: "Kitchen in every suite. $125 dog fee for 5+ nights." , url: "https://home2suites3.hilton.com/en/hotels/colorado/home2-suites-by-hilton-fort-collins-FNLHTHT/about/policies.html" },
-      { id: "cw", task: "Backup: Candlewood Suites", where: "Candlewood Suites", addr: "314 Pavilion Ln", meta: "Full kitchen, free laundry. Takes dogs. Get the pet fee in writing; their own site lists it two ways.", phone: "(970) 223-0200" , url: "https://www.ihg.com/candlewood/hotels/us/en/fort-collins/fclcw/hoteldetail" },
-      { id: "esa", task: "Cheaper option in Loveland", where: "Extended Stay America Select Suites", addr: "3915 Peralta Dr, Loveland", meta: "About 20 min south. Studio around $460–$616 a week. Dogs: up to $25/day the first 6 nights, then $15/day.", phone: "1-800-804-3724" , url: "https://www.extendedstayamerica.com/hotels/co/denver/loveland" },
-      { id: "rf", task: "Old Town studio apartment", where: "Remington Flats", addr: "813 Remington St", meta: "Real studio with a full kitchen and patio. Two studios take dogs: $75 per weekly stay, $125 per month. Pricier, about $1,200+ a week.", phone: "(970) 699-1189" , url: "https://www.remingtonflats.com/extended-stays/fort-collins-weekly-rentals" },
+      { id: "ws", task: "Call WoodSpring for the weekly price", pid: "ChIJ3S8wdB21bocROBYs9HBIyRA", where: "WoodSpring Suites", addr: "847 SE Frontage Rd", meta: "Kitchen in the room. Guest laundry. Dogs to 75 lb: $50 per stay + $10/night. Card only.", phone: "(970) 460-4436" , url: "https://www.woodspring.com/extended-stay-hotels/locations/colorado/fort-collins/woodspring-suites-fort-collins" },
+      { id: "ri", task: "Backup: Residence Inn", pid: "ChIJW63LB5hMaYcR9bv8v0BRXzY", where: "Residence Inn", addr: "1127 Oakridge Dr", meta: "Nicer, pricier. Dogs to 100 lb. About $150 dog fee for 5+ nights.", phone: "(970) 223-5700" , url: "https://www.marriott.com/en-us/hotels/ftcri-residence-inn-fort-collins/overview/" },
+      { id: "h2", task: "Backup: Home2 Suites", pid: "ChIJiyWBl7FMaYcRTMauzHob0TI", where: "Home2 Suites", addr: "4715 S Timberline Rd", meta: "Kitchen in every suite. $125 dog fee for 5+ nights.", phone: "(970) 223-9995" , url: "https://home2suites3.hilton.com/en/hotels/colorado/home2-suites-by-hilton-fort-collins-FNLHTHT/about/policies.html" },
+      { id: "cw", task: "Backup: Candlewood Suites", pid: "ChIJv65u8oFMaYcRlcAfoxBA7R4", where: "Candlewood Suites", addr: "314 Pavilion Ln", meta: "Full kitchen, free laundry. Takes dogs. Get the pet fee in writing; their own site lists it two ways.", phone: "(970) 223-0200" , url: "https://www.ihg.com/candlewood/hotels/us/en/fort-collins/fclcw/hoteldetail" },
+      { id: "esa", task: "Cheaper option in Loveland", pid: "ChIJJRiFMgmtbocRL8JVGzGpxMM", where: "Extended Stay America Select Suites", addr: "3915 Peralta Dr, Loveland", meta: "About 20 min south. Studio around $460–$616 a week. Dogs: up to $25/day the first 6 nights, then $15/day.", phone: "(970) 461-0011" , url: "https://www.extendedstayamerica.com/hotels/co/denver/loveland" },
+      { id: "rf", task: "Old Town studio apartment", pid: "ChIJPe9wyvlKaYcRowgomlTWMH8", where: "Remington Flats", addr: "813 Remington St", meta: "Real studio with a full kitchen and patio. Two studios take dogs: $75 per weekly stay, $125 per month. Pricier, about $1,200+ a week.", phone: "(970) 699-1189" , url: "https://www.remingtonflats.com/extended-stays/fort-collins-weekly-rentals" },
       { id: "ff", task: "Staying a month or more? Furnished monthly rentals", noreviews: true, where: "Furnished Finder", meta: "Furnished rooms and studios by the month, many dog-friendly, about $1,200–$1,800. Cheaper than a hotel after 30 days.", url: "https://www.furnishedfinder.com/housing/us--co--fort-collins" },
       { id: "ask", task: "Ask if the dog can stay in the room while you're at work" }
     ]
@@ -223,47 +224,47 @@ const allFiles = [
       { id: "ref", task: "Get a referral to a Fort Collins rental agent from a realtor you trust" },
       { id: "tell", task: "Tell them: dog, budget, move-in date, no guarantor drama" },
       { id: "loc", task: "Or try an apartment locator", noreviews: true, where: "Premium Apartment Locators, Vita Locators, The Dwelling Collection", meta: "Mostly Denver. Ask first if they cover Fort Collins.", url: "https://vitalocators.com/" },
-      { id: "mnp", task: "Call a local rental company", where: "Mountain-n-Plains", addr: "375 E Horsetooth Rd", meta: "Long-running local company. Homes, duplexes, condos.", phone: "(970) 221-2323" },
-      { id: "egp", task: "Call a local rental company", where: "Evergreen Property Management", addr: "1000 Driftwood Dr", meta: "Long-running local company.", phone: "(970) 226-5600" },
-      { id: "tbc", task: "Call a local rental company", where: "TBC Property Management", addr: "3021 S Taft Hill Rd", meta: "Rents single-family homes.", phone: "(970) 224-0852" },
-      { id: "aps", task: "Call a local rental company", where: "All Property Services", addr: "1630 S College Ave", meta: "Rents single-family homes.", phone: "(970) 224-4446" },
-      { id: "rpm", task: "Call a local rental company", where: "Real Property Management of the Rockies", addr: "2120 S College Ave", meta: "Homes and apartments.", phone: "(970) 658-0410" },
-      { id: "csu", task: "Browse rooms and rentals from private owners", where: "CSU Off-Campus Life listings", addr: "Lory Student Center, Room 281", meta: "Open to the public. Private owners often skip the guarantor. Mon–Fri 9–5.", phone: "(970) 491-2248" }
+      { id: "rpm", task: "Call a local rental company", pid: "ChIJLY0xAHZLaYcRmnuo6GFd9eY", where: "Real Property Management of the Rockies", addr: "1220 Oak Park Dr", meta: "Homes and apartments. Strong renter reviews.", phone: "(970) 817-9026" },
+      { id: "mnp", task: "Call a local rental company", pid: "ChIJtcaCDHpLaYcREVEM8peMKwE", where: "Mountain-n-Plains", addr: "375 E Horsetooth Rd", meta: "Long-running local company. Homes, duplexes, condos.", phone: "(970) 221-2323" },
+      { id: "egp", task: "Call a local rental company", pid: "ChIJRR5fW2ZLaYcR0dDk0UGmIyg", where: "Evergreen Property Management", addr: "1000 Driftwood Dr", meta: "Long-running local company.", phone: "(970) 226-5600" },
+      { id: "tbc", task: "Call a local rental company", pid: "ChIJ5TME6zVKaYcRw41WwC6lmZ4", where: "TBC Property Management", addr: "1612 Laporte Ave #5", meta: "Rents single-family homes.", phone: "(970) 224-0852" },
+      { id: "aps", task: "Call a local rental company", pid: "ChIJ4XOKwopKaYcR0gxrsvJL9IQ", where: "All Property Services", addr: "1630 S College Ave", meta: "Rents single-family homes.", phone: "(970) 224-4446" },
+      { id: "csu", task: "Browse rooms and rentals from private owners", pid: "ChIJrf2kNVdKaYcRKMT8zB9LplY", where: "CSU Off-Campus Life listings", addr: "Lory Student Center, Room 281", meta: "Open to the public. Private owners often skip the guarantor. Mon–Fri 9–5.", phone: "(970) 491-2248" }
     ]
   },
   {
     title: "Showers", plant: "Quaking aspen / Populus tremuloides", art: "aspen",
     prev: "24/7 gym or $10 drop-in.", tag: ["easy", "No forms"],
     items: [
-      { id: "pf", task: "Planet Fitness membership", where: "Planet Fitness", addr: "126 W Troutman Pkwy", meta: "Open 24/7. About $15/month + yearly fee. Locker rooms with showers.", phone: "(970) 682-1006" , url: "https://www.planetfitness.com/gyms/fort-collins-co/" },
-      { id: "na", task: "Or drop in at Northside Aztlan", where: "Northside Aztlan Community Center", addr: "112 E Willow St", meta: "City rec center. $10 drop-in. Weekdays 6 a.m.–9 p.m., weekends 8–5.", phone: "(970) 221-6256" , url: "https://www.fortcollins.gov/Venues/Northside-Aztlan-Community-Center" },
-      { id: "epic", task: "Or drop in at EPIC", where: "EPIC", addr: "1801 Riverside Ave", meta: "City rec center. $10 drop-in. Weekdays from 5:30 a.m.", phone: "(970) 221-6683" , url: "https://www.fortcollins.gov/Venues/Edora-Pool-Ice-Center-EPIC" }
+      { id: "pf", task: "Planet Fitness membership", pid: "ChIJXQcz55NLaYcRCNydbS_phMY", where: "Planet Fitness", addr: "126 W Troutman Pkwy", meta: "Open 24/7. About $15/month + yearly fee. Locker rooms with showers.", phone: "(970) 682-1006" , url: "https://www.planetfitness.com/gyms/fort-collins-co/" },
+      { id: "na", task: "Or drop in at Northside Aztlan", pid: "ChIJ0UJV2YtKaYcRvA6KsnhOlmw", where: "Northside Aztlan Community Center", addr: "112 E Willow St", meta: "City rec center. $10 drop-in. Weekdays 6 a.m.–9 p.m., weekends 8–5.", phone: "(970) 221-6256" , url: "https://www.fortcollins.gov/Venues/Northside-Aztlan-Community-Center" },
+      { id: "epic", task: "Or drop in at EPIC", pid: "ChIJIXe5BCVLaYcRcSYOqiAGFvY", where: "EPIC", addr: "1801 Riverside Ave", meta: "City rec center. $10 drop-in. Weekdays from 5:30 a.m.", phone: "(970) 221-6683" , url: "https://www.fortcollins.gov/Venues/Edora-Pool-Ice-Center-EPIC" }
     ]
   },
   {
     title: "Food", plant: "Soapweed yucca / Yucca glauca", art: "yucca",
     prev: "Pay-what-you-can lunch. Free groceries.", tag: ["easy", "No forms"],
     items: [
-      { id: "cafe", task: "Lunch at FoCo Café", where: "FoCo Café", addr: "225 Maple St", meta: "Pay what you can, or help out instead. Lunch 11–2, most days Mon–Sat. Call to confirm.", phone: "(309) 368-1659" },
-      { id: "fb", task: "Grab groceries at the Food Bank", where: "Food Bank for Larimer County", addr: "1301 Blue Spruce Dr", meta: "Free. Tue, Thu, Fri, Sat 10–3. Pick ready-to-eat stuff.", phone: "(970) 493-4477" }
+      { id: "cafe", task: "Lunch at FoCo Café", pid: "ChIJieQJwmFKaYcRWDVAygMXiUE", where: "FoCo Café", addr: "225 Maple St", meta: "Pay what you can, or help out instead. Lunch 11–2, most days Mon–Sat. Call to confirm.", phone: "(309) 368-1659" },
+      { id: "fb", task: "Grab groceries at the Food Bank", pid: "ChIJm_JJ0INKaYcR_LCz1LnaT14", where: "Food Bank for Larimer County", addr: "1301 Blue Spruce Dr", meta: "Free. Tue, Thu, Fri, Sat 10–3. Pick ready-to-eat stuff.", phone: "(970) 493-4477" }
     ]
   },
   {
     title: "The dog", plant: "Plains sunflower / Helianthus petiolaris", art: "sunflower",
     prev: "Free vet Tuesdays. Cheap shots. Food help.", tag: ["easy", "Mostly no forms"],
     items: [
-      { id: "vet", task: "Sign up for a free Tuesday vet visit", where: "Street Dog Coalition clinic", addr: "242 Conifer St", meta: "Tuesdays 2–3 p.m. Six spots. Sign up at the front desk first. Leash.", phone: "(970) 494-9940" , url: "https://www.thestreetdogcoalition.org/northern-colorado" },
-      { id: "afa", task: "Low-cost shots or free pet food", where: "Animal Friends Alliance clinic", addr: "2321 E Mulberry St", meta: "Free pet food some Sundays and Mondays, 9–noon.", phone: "(970) 484-8516" },
+      { id: "vet", task: "Sign up for a free Tuesday vet visit", pid: "ChIJaUeR8YNKaYcRSarJpS5Qv58", where: "Street Dog Coalition clinic", addr: "242 Conifer St", meta: "Tuesdays 2–3 p.m. Six spots. Sign up at the front desk first. Leash.", phone: "(970) 494-9940" , url: "https://www.thestreetdogcoalition.org/northern-colorado" },
+      { id: "afa", task: "Low-cost shots or free pet food", pid: "ChIJ4UU-ItNKaYcRleBiGp-_LK4", where: "Animal Friends Alliance clinic", addr: "2321 E Mulberry St", meta: "Free pet food some Sundays and Mondays, 9–noon.", phone: "(970) 484-8516" },
       { id: "am", task: "Optional: help with vet bills and supplies", where: "Annie and Millie's Place", meta: "Nonprofit that helps people keep their pets.", phone: "(720) 340-1268" , url: "https://www.annieandmillies.org/" }
     ],
     note: "Warm day = not in a closed car."
   },
   {
     title: "Move-in money", plant: "Blue grama / Bouteloua gracilis", art: "grama",
-    prev: "Help with first month or deposit.", tag: ["form", "Short form / optional"],
-    intro: "Neighbor to Neighbor may cover a first month's rent or a deposit. A job helps. Limit: earning under about $60,100 a year.",
+    prev: "Family is ready to help. Plus a local nonprofit.", tag: ["form", "Short form / optional"],
+    intro: "Family has offered to help with move-in costs. That's on the table any time, just ask. Asking anyone else is optional. Another option: Neighbor to Neighbor is a Fort Collins nonprofit that helps people pay for housing. Its Move-In Rent Assistance may cover part of a first month's rent or a deposit, for people earning under about $60,100 a year. A job counts in your favor.",
     items: [
-      { id: "vm", task: "Leave a voicemail: name, number, \"move-in help\"", where: "Neighbor to Neighbor rent line", addr: "1550 Blue Spruce Dr", phone: "(970) 829-0296" , url: "https://www.n2n.org/rental-options/" },
+      { id: "vm", task: "Leave a voicemail: name, number, \"move-in help\"", pid: "ChIJravqfYJKaYcRA5wBmhyTUfo", where: "Neighbor to Neighbor rent line", addr: "1550 Blue Spruce Dr", phone: "(970) 829-0296" , url: "https://www.n2n.org/rental-options/" },
       { id: "docs", task: "Have a pay stub and ID ready for the callback" }
     ]
   },
@@ -273,7 +274,7 @@ const allFiles = [
     intro: "Parking overnight on Fort Collins city streets can get a ticket. These are reserved, legal spots run by churches.",
     items: [
       { id: "lsl", task: "Apply to Loveland SafeLot", where: "Loveland SafeLot Parking", meta: "About 20 min south. 6 p.m.–8 a.m. Outlets, porta-potty, night cameras. Showers and a hot meal two nights a week. Some pets OK, ask about yours. Needs an online application, background check, short interview, and a registered, insured car. Few spots.", phone: "(970) 685-4173", url: "https://lovelandsafelotparking.org/Become-a-SafeLot-Guest.php" },
-      { id: "fcl", task: "Watch for the Fort Collins church lot", where: "First United Methodist Church", addr: "1005 Stover St", meta: "Planned: up to 7 cars, 7 p.m.–7 a.m., pets OK in the car. City vote Nov 3, then applications open.", url: "https://www.firstchurchfc.org/safeparking" }
+      { id: "fcl", task: "Watch for the Fort Collins church lot", pid: "ChIJk6p9U-NKaYcRsLnaYqEbl9U", where: "First United Methodist Church", addr: "1005 Stover St", meta: "Planned: up to 7 cars, 7 p.m.–7 a.m., pets OK in the car. City vote Nov 3, then applications open.", url: "https://www.firstchurchfc.org/safeparking" }
     ]
   },
   {
@@ -281,7 +282,7 @@ const allFiles = [
     prev: "One building. Free laundry too.", tag: ["form", "Short form / optional"],
     intro: "One building, a lot of free practical stuff. Fill out a short form once, then use only what you want. All voluntary.",
     items: [
-      { id: "call", task: "Call and ask if dogs can come inside", where: "Murphy Center", addr: "242 Conifer St", meta: "Mon–Fri 8–5.", phone: "(970) 494-9940" , url: "https://www.homewardalliance.org/murphy-center/hours-faqs/" },
+      { id: "call", task: "Call and ask if dogs can come inside", pid: "ChIJaUeR8YNKaYcRSarJpS5Qv58", where: "Murphy Center", addr: "242 Conifer St", meta: "Mon–Fri 8–5.", phone: "(970) 494-9940" , url: "https://www.homewardalliance.org/murphy-center/hours-faqs/" },
       { id: "mail", task: "Set up a mailing address" },
       { id: "laundry", task: "Laundry or shower (sign up 8–9 a.m.)" },
       { id: "locker", task: "Get a locker" }
@@ -330,9 +331,9 @@ function itemHTML(n, it) {
       <label class="task" for="${cid}">${it.task}</label>
       ${it.where ? `<span class="where">${it.where}</span>` : ""}
       ${it.meta ? `<span class="meta">${it.meta}</span>` : ""}
-      ${it.addr || it.phone || it.url || it.where ? `<div class="row">
-        ${it.addr ? `<a class="btn" href="${map(it.addr)}" target="_blank" rel="noopener">${it.addr} ↗</a>` : ""}
-        ${it.where && !it.noreviews ? `<a class="btn" href="${map(it.where + (it.addr ? ", " + it.addr : ""))}" target="_blank" rel="noopener">★ Reviews ↗</a>` : ""}
+      ${it.addr || it.phone || it.url || it.pid ? `<div class="row">
+        ${it.addr ? `<a class="btn" href="${it.pid ? prof(it) : map(it.addr)}" target="_blank" rel="noopener">${it.addr} ↗</a>` : ""}
+        ${it.pid ? `<a class="btn" href="${prof(it)}" target="_blank" rel="noopener">★ Google reviews ↗</a>` : ""}
         ${it.url ? `<a class="btn" href="${it.url}" target="_blank" rel="noopener">Website ↗</a>` : ""}
         ${it.phone ? `<a class="btn solid call" href="tel:+1${it.phone.replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "")}">Call ${it.phone}</a><button class="btn copy" type="button" data-copy="${it.phone}">Copy</button>` : ""}
       </div>` : ""}
