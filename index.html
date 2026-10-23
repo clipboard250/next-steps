@@ -183,17 +183,21 @@ const ART = {
 const sketch = (k, cls = "") => `<svg class="flora ${cls}" viewBox="0 0 80 80" aria-hidden="true"><g filter="url(#pencil)">${ART[k]}</g></svg>`;
 const check = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></svg>`;
 
-const map = a => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(a + ", Fort Collins, CO");
+const map = a => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(/Loveland/.test(a) ? a + ", CO" : a + ", Fort Collins, CO");
 
 const allFiles = [
   {
     title: "Room w/ dog", plant: "Prickly pear / Opuntia polyacantha", art: "pricklypear",
-    prev: "Weekly hotel rooms. No lease. Dog stays.", tag: ["easy", "No forms / just check in"],
+    prev: "Weekly hotels, studios and monthly rentals. No lease. Dog stays.", tag: ["easy", "No forms / just check in"],
     intro: "Pay by the week, extend by the week. The fastest way indoors with the dog.",
     items: [
       { id: "ws", task: "Call WoodSpring for the weekly price", where: "WoodSpring Suites", addr: "847 SE Frontage Rd", meta: "Kitchen in the room. Guest laundry. Dogs to 75 lb: $50 per stay + $10/night. Card only.", phone: "(970) 460-4436" },
       { id: "ri", task: "Backup: Residence Inn", where: "Residence Inn", addr: "1127 Oakridge Dr", meta: "Nicer, pricier. Dogs to 100 lb. About $150 dog fee for 5+ nights.", phone: "(970) 223-5700" },
       { id: "h2", task: "Backup: Home2 Suites", where: "Home2 Suites", addr: "4715 S Timberline Rd", meta: "Kitchen in every suite. $125 dog fee for 5+ nights." },
+      { id: "cw", task: "Backup: Candlewood Suites", where: "Candlewood Suites", addr: "314 Pavilion Ln", meta: "Full kitchen, free laundry. Takes dogs. Get the pet fee in writing; their own site lists it two ways.", phone: "(970) 223-0200" },
+      { id: "esa", task: "Cheaper option in Loveland", where: "Extended Stay America Select Suites", addr: "3915 Peralta Dr, Loveland", meta: "About 20 min south. Studio around $460–$616 a week. Dogs: up to $25/day the first 6 nights, then $15/day.", phone: "1-800-804-3724" },
+      { id: "rf", task: "Old Town studio apartment", where: "Remington Flats", addr: "813 Remington St", meta: "Real studio with a full kitchen and patio. Two studios take dogs: $75 per weekly stay, $125 per month. Pricier, about $1,200+ a week.", phone: "(970) 699-1189" },
+      { id: "ff", task: "Staying a month or more? Furnished monthly rentals", where: "Furnished Finder", meta: "Furnished rooms and studios by the month, many dog-friendly, about $1,200–$1,800. Cheaper than a hotel after 30 days.", url: "https://www.furnishedfinder.com/housing/us--co--fort-collins" },
       { id: "ask", task: "Ask if the dog can stay in the room while you're at work" }
     ]
   },
@@ -213,11 +217,17 @@ const allFiles = [
   {
     title: "Let someone else search", plant: "Rubber rabbitbrush / Ericameria nauseosa", art: "rabbitbrush",
     prev: "One person finds the place and handles the back-and-forth.", tag: ["easy", "One person / one form"],
-    intro: "A rental agent or apartment locator does the searching and most of the paperwork. Locators are usually free to renters because the buildings pay them.",
+    intro: "A rental agent or apartment locator does the searching and most of the paperwork. Locators are usually free to renters because the buildings pay them. The local rental companies below are long-running, with strong Better Business Bureau grades, and rent out homes for their owners. Ask each one: \"Do you allow dogs?\"",
+    note: "Scam check: never wire money or pay by gift card. See the inside before paying anything. Walk away if they won't meet in person.",
     items: [
       { id: "ref", task: "Get a referral to a Fort Collins rental agent from a realtor you trust" },
       { id: "tell", task: "Tell them: dog, budget, move-in date, no guarantor drama" },
       { id: "loc", task: "Or try an apartment locator", where: "Premium Apartment Locators, Vita Locators, The Dwelling Collection", meta: "Mostly Denver. Ask first if they cover Fort Collins.", url: "https://vitalocators.com/" },
+      { id: "mnp", task: "Call a local rental company", where: "Mountain-n-Plains", addr: "375 E Horsetooth Rd", meta: "Long-running local company. Homes, duplexes, condos.", phone: "(970) 221-2323" },
+      { id: "egp", task: "Call a local rental company", where: "Evergreen Property Management", addr: "1000 Driftwood Dr", meta: "Long-running local company.", phone: "(970) 226-5600" },
+      { id: "tbc", task: "Call a local rental company", where: "TBC Property Management", addr: "3021 S Taft Hill Rd", meta: "Rents single-family homes.", phone: "(970) 224-0852" },
+      { id: "aps", task: "Call a local rental company", where: "All Property Services", addr: "1630 S College Ave", meta: "Rents single-family homes.", phone: "(970) 224-4446" },
+      { id: "rpm", task: "Call a local rental company", where: "Real Property Management of the Rockies", addr: "2120 S College Ave", meta: "Homes and apartments.", phone: "(970) 658-0410" },
       { id: "csu", task: "Browse rooms and rentals from private owners", where: "CSU Off-Campus Life listings", addr: "Lory Student Center, Room 281", meta: "Open to the public. Private owners often skip the guarantor. Mon–Fri 9–5.", phone: "(970) 491-2248" }
     ]
   },
@@ -323,7 +333,7 @@ function itemHTML(n, it) {
       ${it.addr || it.phone || it.url ? `<div class="row">
         ${it.addr ? `<a class="btn" href="${map(it.addr)}" target="_blank" rel="noopener">${it.addr} ↗</a>` : ""}
         ${it.url ? `<a class="btn" href="${it.url}" target="_blank" rel="noopener">Website ↗</a>` : ""}
-        ${it.phone ? `<a class="btn solid call" href="tel:+1${it.phone.replace(/\D/g, "")}">Call ${it.phone}</a><button class="btn copy" type="button" data-copy="${it.phone}">Copy</button>` : ""}
+        ${it.phone ? `<a class="btn solid call" href="tel:+1${it.phone.replace(/\D/g, "").replace(/^1(?=\d{10}$)/, "")}">Call ${it.phone}</a><button class="btn copy" type="button" data-copy="${it.phone}">Copy</button>` : ""}
       </div>` : ""}
     </div>
   </div>`;
